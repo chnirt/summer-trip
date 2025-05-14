@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Summer Trip Registration",
-  description: "Register for company summer trips",
+  title: "Summer Journey Registration",
+  description: "Register for summer journeys and trips",
 };
 
 export default function RootLayout({
