@@ -1,11 +1,13 @@
 "use client";
 
-import OnboardingForm from "@/components/OnboardingForm";
+import ProfileForm from "@/components/profile-form";
 
 export default function OnboardingPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <OnboardingForm />
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-24">
+      <div className="w-full max-w-md">
+        <ProfileForm />
+      </div>
     </main>
   );
 }
