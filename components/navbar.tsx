@@ -2,7 +2,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 
-export function SiteHeader() {
+export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b bg-white">
       <div className="mx-auto flex h-16 max-w-7xl flex-1 items-center justify-between px-4 sm:px-6 lg:px-8">
