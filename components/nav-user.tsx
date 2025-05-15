@@ -1,10 +1,10 @@
 "use client"
 
 import {
-  IconCreditCard,
+  // IconCreditCard,
   IconDotsVertical,
   IconLogout,
-  IconNotification,
+  // IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react"
 
