@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Info, Search, MapPin } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+
+import backgroundImage from "../../public/background.jpg";
 
 // Types
 type Destination = {
@@ -81,6 +84,13 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero section */}
         <div className="bg-primary/5 relative py-10 md:py-14">
+          <Image
+            src={backgroundImage}
+            alt="Background"
+            fill
+            style={{ objectFit: "cover", zIndex: 0 }}
+            priority
+          />
           <div className="relative z-10 mx-auto max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
             <div className="max-w-2xl">
               <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
