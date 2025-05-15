@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { IconMapPin } from "@tabler/icons-react";
 
 import { LoginForm } from "@/components/login-form";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ export default function LoginPage() {
       <div className="flex w-full max-w-sm flex-col gap-6">
         <a href="#" className="flex items-center gap-2 self-center font-medium">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <MapPin className="size-4" />
+            <IconMapPin className="size-4" />
           </div>
           Summer Journeys
         </a>
