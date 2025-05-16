@@ -11,27 +11,33 @@ import CRUDTemplate from "@/components/dashboard/crud-template";
 
 const table = "destinations";
 const model = "Destination";
-const headers = [
+
+const regionOptions = [
   {
-    field: "name",
-    title: "Name",
-    classNames: {
-      tableCell: "font-medium break-all",
-    },
+    value: "north",
+    label: "North",
   },
   {
-    field: "description",
-    title: "Description",
-    classNames: {
-      tableCell: "font-medium break-all",
-    },
+    value: "central",
+    label: "Central",
   },
   {
-    field: "status",
-    title: "Status",
-    classNames: {
-      tableCell: "font-medium break-all",
-    },
+    value: "south",
+    label: "South",
+  },
+];
+const statusOptions = [
+  {
+    value: "active",
+    label: "Active",
+  },
+  {
+    value: "draft",
+    label: "Draft",
+  },
+  {
+    value: "inactive",
+    label: "Inactive",
   },
 ];
 const fields = [
@@ -45,23 +51,16 @@ const fields = [
     component: "textarea",
   },
   {
+    name: "region",
+    label: "Region",
+    component: "select",
+    options: regionOptions,
+  },
+  {
     name: "status",
     label: "Status",
     component: "select",
-    options: [
-      {
-        value: "active",
-        label: "Active",
-      },
-      {
-        value: "draft",
-        label: "Draft",
-      },
-      {
-        value: "inactive",
-        label: "Inactive",
-      },
-    ],
+    options: statusOptions,
   },
 ];
 const schema = destinationSchema;
@@ -69,6 +68,7 @@ type DefaultFormValues = DestinationFormValues;
 const defaultFormValues: DefaultFormValues = {
   name: "",
   description: "",
+  region: "north",
   status: "active",
 };
 
@@ -77,6 +77,31 @@ export default function Page() {
     resolver: zodResolver(schema),
     defaultValues: defaultFormValues,
   });
+
+  const headers = [
+    {
+      field: "name",
+      title: "Name",
+    },
+    {
+      field: "description",
+      title: "Description",
+    },
+    {
+      field: "region",
+      title: "Region",
+      render: (value: string) => {
+        return regionOptions.find((option) => option.value === value)?.label;
+      },
+    },
+    {
+      field: "status",
+      title: "Status",
+      render: (value: string) => {
+        return statusOptions.find((option) => option.value === value)?.label;
+      },
+    },
+  ];
 
   return (
     <FormProvider {...methods}>

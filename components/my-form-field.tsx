@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
+import { DatePickerWithRange } from "./date-picker-with-range";
+import { DatePicker } from "./date-picker";
 
 type Option = {
   value: string;
@@ -57,11 +59,26 @@ export default function MyFormField({
           ) : label ? (
             <FormLabel htmlFor={name}>{label}</FormLabel>
           ) : null}
-          {component === "select" ? (
+          {component === "number" ? (
+            <FormControl>
+              <Input
+                id={name}
+                type="number"
+                placeholder={placeholder}
+                {...field}
+              />
+            </FormControl>
+          ) : component === "date-picker" ? (
+            <DatePicker id={name} {...field} />
+          ) : component === "date-range" ? (
+            <FormControl>
+              <DatePickerWithRange id={name} {...field} />
+            </FormControl>
+          ) : component === "select" ? (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a verified email to display" />
+                  <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>

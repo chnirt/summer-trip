@@ -54,8 +54,8 @@ const profileFormSchema = z.object({
   phoneNumber: z.string().min(10, {
     message: "Phone number must be at least 10 digits.",
   }),
-  area: z.string({
-    required_error: "Please select an area.",
+  region: z.string({
+    required_error: "Please select an region.",
   }),
   department: z.string({
     required_error: "Please select a department.",
@@ -89,7 +89,7 @@ export default function ProfileForm() {
       fullName: "aa",
       employeeId: "1",
       phoneNumber: "1111111111",
-      area: "North",
+      region: "north",
       department: "HR",
       idCardNumber: "111111111",
       dateOfBirth: new Date("2025-04-30T17:00:00.000Z"),
@@ -114,7 +114,7 @@ export default function ProfileForm() {
         full_name: formData.fullName,
         employee_id: formData.employeeId,
         phone_number: formData.phoneNumber,
-        area: formData.area,
+        region: formData.region,
         department: formData.department,
         id_card_number: formData.idCardNumber,
         date_of_birth: formData.dateOfBirth,
@@ -262,7 +262,7 @@ export default function ProfileForm() {
 
               <FormField
                 control={form.control}
-                name="area"
+                name="region"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Area</FormLabel>
@@ -276,9 +276,9 @@ export default function ProfileForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="North">North</SelectItem>
-                        <SelectItem value="Central">Central</SelectItem>
-                        <SelectItem value="South">South</SelectItem>
+                        <SelectItem value="north">North</SelectItem>
+                        <SelectItem value="central">Central</SelectItem>
+                        <SelectItem value="south">South</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

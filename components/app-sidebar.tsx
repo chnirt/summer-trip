@@ -18,7 +18,7 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
+  // IconUsers,
 } from "@tabler/icons-react";
 
 // import { NavDocuments } from "@/components/nav-documents";
@@ -50,7 +50,7 @@ const data = {
     { title: "Destinations", url: "/admin/destinations", icon: IconMapPin },
     { title: "Tours", url: "/admin/tours", icon: IconCalendar },
     { title: "Bookings", url: "/admin/bookings", icon: IconListDetails },
-    { title: "Users", url: "/admin/users", icon: IconUsers },
+    // { title: "Users", url: "/admin/users", icon: IconUsers },
     // {
     //   title: "Lifecycle",
     //   url: "#",

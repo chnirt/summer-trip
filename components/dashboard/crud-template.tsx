@@ -44,7 +44,7 @@ type Header = {
     tableRow?: string;
     tableBody?: string;
   };
-  render?: (value: string) => string;
+  render?: (value: string) => string | undefined;
 };
 
 type Headers = Header[];
@@ -299,13 +299,31 @@ export default function CRUDTemplate({
     }
   };
 
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDateValues = (obj: unknown): unknown => {
+    const formattedObj = { ...(obj as Record<string, unknown>) };
+    for (const key in formattedObj) {
+      if (formattedObj[key] instanceof Date) {
+        formattedObj[key] = formatLocalDate(formattedObj[key]);
+      }
+    }
+    return formattedObj;
+  };
+
   const handleOnUpdate = async (id: string, values: unknown) => {
     setDialogLoading(true);
     try {
       const supabase = createClient();
+      const formattedValues = formatDateValues(values);
       const { data, error } = await supabase
         .from(table)
-        .update(values)
+        .update(formattedValues)
         .eq("id", id)
         .select();
 
