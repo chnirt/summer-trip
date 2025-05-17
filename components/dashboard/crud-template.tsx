@@ -28,6 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
 import { get } from "lodash";
 import { Loader2, MoreHorizontal, PlusCircle } from "lucide-react";
@@ -420,7 +421,10 @@ export default function CRUDTemplate({
                     {headers.map((header, hi) => (
                       <TableHead
                         key={[header.field, hi].join("-")}
-                        className={header.classNames?.tableHead}
+                        className={cn(
+                          "max-w-[100px]",
+                          header.classNames?.tableHead,
+                        )}
                       >
                         {header.title}
                       </TableHead>
@@ -458,7 +462,10 @@ export default function CRUDTemplate({
                             return (
                               <TableCell
                                 key={[header.field, hi].join("-")}
-                                className={header.classNames?.tableCell}
+                                className={cn(
+                                  "max-w-[100px] truncate",
+                                  header.classNames?.tableCell,
+                                )}
                               >
                                 <>
                                   {typeof header?.render === "function" && value
