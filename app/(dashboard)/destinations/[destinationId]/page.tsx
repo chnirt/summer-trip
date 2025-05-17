@@ -106,7 +106,8 @@ export default function DestinationPage() {
     const { data, error } = await supabase
       .from("tours")
       .select("*")
-      .eq("destination_id", destinationId);
+      .eq("destination_id", destinationId)
+      .order("created_at", { ascending: true });
 
     if (error) {
       console.error("Error fetching tours:", error);
@@ -446,6 +447,7 @@ export default function DestinationPage() {
                             }
                             onShowUsers={() => showRegisteredUsers(tourDate.id)}
                             isUserRegistered={isUserRegistered}
+                            hasBooked={!!booking}
                           />
                         );
                       })}
@@ -602,12 +604,14 @@ function TourDateCard({
   onCancel,
   onShowUsers,
   isUserRegistered,
+  hasBooked,
 }: {
   tourDate: TourDate;
   onBook: () => void;
   onCancel: () => void;
   onShowUsers: () => void;
   isUserRegistered: boolean;
+  hasBooked: boolean;
 }) {
   const isFullyBooked = tourDate.registered >= tourDate.capacity;
   const isUserBooking = isUserRegistered;
@@ -689,7 +693,7 @@ function TourDateCard({
               size="sm"
               variant="default"
               onClick={onBook}
-              disabled={isFullyBooked}
+              disabled={isFullyBooked || hasBooked}
               className="flex-1"
             >
               Book Now
