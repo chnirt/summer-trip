@@ -65,6 +65,7 @@ type CRUDTemplateProps = {
   headers: Headers;
   fields: Fields;
   actions?: Actions;
+  canCreate?: boolean;
 };
 
 type Data = {
@@ -79,6 +80,7 @@ export default function CRUDTemplate({
   headers,
   fields,
   actions,
+  canCreate = true,
 }: CRUDTemplateProps) {
   const methods = useFormContext();
 
@@ -395,17 +397,19 @@ export default function CRUDTemplate({
     <div className="px-4 lg:px-6">
       <Tabs defaultValue="all">
         <div className="flex items-center">
-          <div className="ml-auto flex items-center gap-2">
-            <Button
-              size="sm"
-              className="h-7 gap-1"
-              onClick={handleShowCreateAlertDialog}
-            >
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                {createButtonText}
-              </span>
-            </Button>
+          <div className="ml-auto flex items-center gap-2 h-7">
+            {canCreate ? (
+              <Button
+                size="sm"
+                className="gap-1"
+                onClick={handleShowCreateAlertDialog}
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  {createButtonText}
+                </span>
+              </Button>
+            ) : null}
           </div>
         </div>
         <TabsContent value="all">

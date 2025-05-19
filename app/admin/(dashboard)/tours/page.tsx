@@ -56,7 +56,7 @@ export default function Page() {
   const headers = [
     {
       field: "destination_id",
-      title: "Destination ID",
+      title: "Destination",
       render: (value: string) => {
         return destinationOptions.find((option) => option.value === value)
           ?.label;

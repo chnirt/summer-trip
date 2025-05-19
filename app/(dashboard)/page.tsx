@@ -92,7 +92,7 @@ export default function HomePage() {
     } else if (isUserLoaded && !user) {
       setIsLoading(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUserLoaded, supabase, user]);
 
   return (
