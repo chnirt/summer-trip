@@ -147,22 +147,21 @@ export default function ProfileForm() {
   useEffect(() => {
     // Only check profile if user is loaded and authenticated
     if (isUserLoaded && user) {
-      // const supabase = createClient();
-      // supabase
-      //   .from("profiles")
-      //   .select("id")
-      //   .eq("user_id", user.id)
-      //   .single()
-      //   .then(({ data }) => {
-      //     if (data) {
-      //       // Profile exists, redirect to home (or dashboard)
-      //       router.replace("/");
-      //     } else {
-      //       // No profile, allow form to render
-      //       setCheckingProfile(false);
-      //     }
-      //   });
-      setCheckingProfile(false);
+      const supabase = createClient();
+      supabase
+        .from("profiles")
+        .select("id")
+        .eq("user_id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data) {
+            // Profile exists, redirect to home (or dashboard)
+            router.replace("/");
+          } else {
+            // No profile, allow form to render
+            setCheckingProfile(false);
+          }
+        });
     } else if (isUserLoaded && !user) {
       router.replace("/");
     }
@@ -340,8 +339,8 @@ export default function ProfileForm() {
                       Date of Birth <span className="text-red-500">*</span>
                     </FormLabel>
                     <DatePicker
-                      date={field.value}
-                      setDate={field.onChange}
+                      value={field.value}
+                      onChange={field.onChange}
                       saveAsUTC={true}
                     />
                     <FormDescription>

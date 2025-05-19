@@ -69,7 +69,7 @@ export default function MyFormField({
               />
             </FormControl>
           ) : component === "date-picker" ? (
-            <DatePicker id={name} {...field} />
+            <DatePicker {...field} />
           ) : component === "date-range" ? (
             <FormControl>
               <DatePickerWithRange id={name} {...field} />
