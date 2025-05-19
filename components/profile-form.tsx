@@ -81,18 +81,18 @@ export default function ProfileForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      // fullName: "",
-      // employeeId: "",
-      // phoneNumber: "",
-      // idCardNumber: "",
+      fullName: "",
+      employeeId: "",
+      phoneNumber: "",
+      idCardNumber: "",
 
-      fullName: "aa",
-      employeeId: "1",
-      phoneNumber: "1111111111",
-      region: "north",
-      department: "HR",
-      idCardNumber: "111111111",
-      dateOfBirth: new Date("2025-04-30T17:00:00.000Z"),
+      // fullName: "aa",
+      // employeeId: "1",
+      // phoneNumber: "1111111111",
+      // region: "north",
+      // department: "HR",
+      // idCardNumber: "111111111",
+      // dateOfBirth: new Date("2025-04-30T17:00:00.000Z"),
     },
   });
 
