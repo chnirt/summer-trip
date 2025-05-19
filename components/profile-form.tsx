@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -28,12 +27,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -42,6 +35,7 @@ import {
 } from "@/components/ui/card";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
+import { DatePicker } from "./date-picker";
 
 // Define the form validation schema
 const profileFormSchema = z.object({
@@ -153,21 +147,22 @@ export default function ProfileForm() {
   useEffect(() => {
     // Only check profile if user is loaded and authenticated
     if (isUserLoaded && user) {
-      const supabase = createClient();
-      supabase
-        .from("profiles")
-        .select("id")
-        .eq("user_id", user.id)
-        .single()
-        .then(({ data }) => {
-          if (data) {
-            // Profile exists, redirect to home (or dashboard)
-            router.replace("/");
-          } else {
-            // No profile, allow form to render
-            setCheckingProfile(false);
-          }
-        });
+      // const supabase = createClient();
+      // supabase
+      //   .from("profiles")
+      //   .select("id")
+      //   .eq("user_id", user.id)
+      //   .single()
+      //   .then(({ data }) => {
+      //     if (data) {
+      //       // Profile exists, redirect to home (or dashboard)
+      //       router.replace("/");
+      //     } else {
+      //       // No profile, allow form to render
+      //       setCheckingProfile(false);
+      //     }
+      //   });
+      setCheckingProfile(false);
     } else if (isUserLoaded && !user) {
       router.replace("/");
     }
@@ -344,34 +339,11 @@ export default function ProfileForm() {
                     <FormLabel>
                       Date of Birth <span className="text-red-500">*</span>
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={`w-full pl-3 text-left font-normal ${!field.value && "text-muted-foreground"}`}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("1900-01-01")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker
+                      date={field.value}
+                      setDate={field.onChange}
+                      saveAsUTC={true}
+                    />
                     <FormDescription>
                       Required for insurance registration.
                     </FormDescription>
