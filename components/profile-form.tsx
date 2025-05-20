@@ -79,6 +79,8 @@ export default function ProfileForm() {
       employeeId: "",
       phoneNumber: "",
       idCardNumber: "",
+      department: "HR",
+      region: "north",
 
       // fullName: "aa",
       // employeeId: "1",
@@ -265,7 +267,7 @@ export default function ProfileForm() {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select your area" />
                         </SelectTrigger>
                       </FormControl>
@@ -287,11 +289,11 @@ export default function ProfileForm() {
                   <FormItem>
                     <FormLabel>Department</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
                       defaultValue={field.value}
+                      onValueChange={field.onChange}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select your department" />
                         </SelectTrigger>
                       </FormControl>
@@ -333,16 +335,12 @@ export default function ProfileForm() {
               <FormField
                 control={form.control}
                 name="dateOfBirth"
-                render={({ field }) => (
+                render={({ field, fieldState: { error } }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>
                       Date of Birth <span className="text-red-500">*</span>
                     </FormLabel>
-                    <DatePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      saveAsUTC={true}
-                    />
+                    <DatePicker {...field} saveAsUTC={true} error={!!error} />
                     <FormDescription>
                       Required for insurance registration.
                     </FormDescription>

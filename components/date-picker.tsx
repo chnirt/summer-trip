@@ -26,6 +26,7 @@ interface DatePickerProps {
   className?: string;
   // Add option to specify how to handle timezone
   saveAsUTC?: boolean;
+  error?: string | boolean;
 }
 
 export function DatePicker({
@@ -33,6 +34,7 @@ export function DatePicker({
   onChange,
   className,
   saveAsUTC = false,
+  error,
 }: DatePickerProps) {
   const [month, setMonth] = React.useState<number>(
     value ? value.getMonth() : new Date().getMonth(),
@@ -69,26 +71,6 @@ export function DatePicker({
     }
   }, [value]);
 
-  // Update date when month or year changes
-  React.useEffect(() => {
-    if (value) {
-      const newDate = new Date(value);
-      const currentDay = newDate.getDate();
-
-      // Create a new date with the selected year and month, but keep the same day
-      // We need to handle month boundaries correctly
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const adjustedDay = Math.min(currentDay, daysInMonth);
-
-      newDate.setFullYear(year);
-      newDate.setMonth(month);
-      newDate.setDate(adjustedDay);
-
-      // Keep the same time
-      onChange(newDate);
-    }
-  }, [month, year, onChange, value]);
-
   // Function to handle date selection
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && saveAsUTC) {
@@ -109,13 +91,20 @@ export function DatePicker({
         <PopoverTrigger asChild>
           <Button
             id="date"
-            variant={"outline"}
+            variant="outline"
             className={cn(
               "w-full justify-start text-left font-normal",
               !value && "text-muted-foreground",
+              error &&
+                "border-destructive text-destructive focus-visible:ring-destructive hover:bg-destructive/10 hover:text-destructive/90",
+              className,
             )}
+            aria-invalid={!!error}
+            aria-describedby={error ? "date-error" : undefined}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon
+              className={cn("mr-2 h-4 w-4", error ? "text-destructive" : "")}
+            />
             {value ? format(value, "PPP") : <span>Select date</span>}
           </Button>
         </PopoverTrigger>

@@ -12,6 +12,7 @@ import { useUser } from "@clerk/nextjs";
 import { createClient } from "@/utils/supabase/client";
 import { useBooking } from "@/contexts/booking-context";
 import { formatDateRange } from "@/lib/dateUtils";
+import { useRouter } from "next/navigation";
 
 import backgroundImage from "../../public/background.jpg";
 
@@ -27,6 +28,7 @@ type Destination = {
 
 export default function HomePage() {
   const supabase = createClient();
+  const router = useRouter();
   const { user, isLoaded: isUserLoaded } = useUser();
   const { booking, fetchMyBooking } = useBooking();
 
@@ -53,6 +55,7 @@ export default function HomePage() {
             console.error("Failed to fetch profile:", profileError);
             setError("Unable to load your profile information.");
             setIsLoading(false);
+            router.push("/onboarding");
             return;
           }
 
