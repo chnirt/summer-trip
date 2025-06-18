@@ -11,7 +11,10 @@ import { useBooking } from "@/contexts/booking-context";
 import { formatDateRange } from "@/lib/dateUtils";
 import DestinationCard, { Destination } from "@/components/destination-card";
 import { useUserProfile } from "@/contexts/user-context";
-import bannerImage from "../../public/banner.png";
+import banner1Image from "../../public/mobile-banner.png";
+import banner2Image from "../../public/tablet-banner.png";
+import banner3Image from "../../public/laptop-banner.png";
+import banner4Image from "../../public/big-laptop-banner.png";
 
 export default function HomePage() {
   const supabase = createClient();
@@ -75,10 +78,35 @@ export default function HomePage() {
         <div className="bg-primary/5 relative py-10 md:py-14">
           <div className="absolute inset-0 z-0">
             <Image
-              src={bannerImage}
+              className="flex md:hidden"
+              src={banner1Image}
               alt="Banner"
               fill
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "contain" }}
+              priority
+            />
+            <Image
+              className="hidden md:flex lg:hidden"
+              src={banner2Image}
+              alt="Banner"
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+            />
+            <Image
+              className="hidden lg:flex xl:hidden"
+              src={banner3Image}
+              alt="Banner"
+              fill
+              style={{ objectFit: "contain" }}
+              priority
+            />
+            <Image
+              className="hidden xl:flex"
+              src={banner4Image}
+              alt="Banner"
+              fill
+              style={{ objectFit: "contain" }}
               priority
             />
           </div>

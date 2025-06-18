@@ -26,6 +26,7 @@ import TourDateCard, {
   TourDate,
 } from "@/components/tour-date-card";
 import ninhBinhInfographicImage from "../../../../public/ninh-binh-infographic.jpg";
+import ReactPlayer from "react-player";
 
 // Types
 type Destination = {
@@ -166,7 +167,7 @@ export default function DestinationPage() {
       }
 
       const supabase = createClient();
-      const { error } = await supabase.rpc("book_tour_atomic", {
+      const { error } = await supabase.rpc("book_tour_atomic_2", {
         p_tour_id: selectedTourId,
         p_user_id: user?.profile?.id,
       });
@@ -205,7 +206,7 @@ export default function DestinationPage() {
         return;
       }
 
-      const { error } = await supabase.rpc("cancel_booking_atomic", {
+      const { error } = await supabase.rpc("cancel_booking_atomic_2", {
         p_booking_id: selectedBookingId,
         p_user_id: user?.profile?.id,
       });
@@ -313,13 +314,8 @@ export default function DestinationPage() {
   return (
     <>
       <div
-        className="relative bg-black"
-        style={{
-          backgroundImage: `url('/ninh-binh-banner2.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
+        className="relative bg-black bg-contain bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/ninh-binh-banner2.jpg')" }}
       >
         <div className="relative h-[35vh] overflow-hidden md:h-[40vh] lg:h-[45vh]">
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -346,13 +342,14 @@ export default function DestinationPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <Card className="mb-8">
-              <CardContent className="p-6">
+              <CardContent className="flex flex-col p-6">
                 <h2 className="mb-4 text-2xl font-bold">
                   Đôi nét về {destination.name}
                 </h2>
-                <p className="text-muted-foreground">
+                {/* <p className="text-muted-foreground">
                   {destination.description}
-                </p>
+                </p> */}
+                <ReactPlayer url="https://youtu.be/7SLRfQPnGho" width="100%" />
               </CardContent>
             </Card>
             <Card className="mb-8">
