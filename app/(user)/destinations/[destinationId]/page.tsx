@@ -349,7 +349,14 @@ export default function DestinationPage() {
                 {/* <p className="text-muted-foreground">
                   {destination.description}
                 </p> */}
-                <ReactPlayer url="https://youtu.be/7SLRfQPnGho" width="100%" />
+                <ReactPlayer
+                  style={{
+                    borderRadius: "var(--radius)",
+                    overflow: "hidden",
+                  }}
+                  url="https://youtu.be/7SLRfQPnGho"
+                  width="100%"
+                />
               </CardContent>
             </Card>
             <Card className="mb-8">
