@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Đăng ký hành trình mùa hè",
-  description: "Đăng ký các chuyến đi và hành trình mùa hè",
+  title: "Happy Trip – Togetherness 2025",
+  description: "Đăng ký tham gia chương trình team building 2025",
 };
 
 export default function RootLayout({

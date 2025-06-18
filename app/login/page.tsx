@@ -39,7 +39,7 @@ export default async function LoginPage() {
               className="w-40"
             />
           </div>
-          Hành trình mùa hè
+          Happy Trip – Togetherness 2025
         </a>
         <LoginForm />
       </div>
