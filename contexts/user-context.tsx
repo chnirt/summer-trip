@@ -46,15 +46,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         .eq("email", email)
         .single();
 
-      if (!profile?.is_confirmed) {
-        router.push("/confirm-info");
-      }
-
       if (profile?.role === "admin") {
         router.push("/admin/dashboard"); // Redirect admin to admin dashboard
+      } else {
+        if (!profile?.is_confirmed) {
+          router.push("/confirm-info");
+        } else {
+          router.push("/");
+        }
       }
-
-      router.push("/");
 
       setUserProfile({ email, profile, session });
     }
