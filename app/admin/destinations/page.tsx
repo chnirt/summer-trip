@@ -25,6 +25,14 @@ const regionOptions = [
     value: "south",
     label: "South",
   },
+  {
+    value: "phuquoc",
+    label: "Phu Quoc",
+  },
+  {
+    value: "foreign",
+    label: "Foreign",
+  },
 ];
 const statusOptions = [
   {

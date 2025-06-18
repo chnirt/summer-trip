@@ -1,8 +1,8 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import { useUser } from "@clerk/nextjs";
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useUserProfile } from "./user-context";
 
 interface Booking {
   id: string;
@@ -22,7 +22,7 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
   const supabase = createClient();
-  const { user } = useUser();
+  const user = useUserProfile();
 
   const [booking, setBooking] = useState<Booking | undefined>(undefined);
 
@@ -46,7 +46,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
             )
           `,
         )
-        .eq("user_id", user?.id)
+        .eq("user_id", user?.profile?.id)
         .single();
 
       // Handle booking fetch error or absence of booking

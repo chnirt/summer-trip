@@ -16,20 +16,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  ChevronRight,
-  Clock,
-  Users,
-  Info,
-  Calendar,
-  Loader2,
-  LoaderCircle,
-} from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+import { ChevronRight, Info, Loader2, LoaderCircle } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import { useBooking } from "@/contexts/booking-context";
-import { formatDateRange } from "@/lib/dateUtils";
+import { useUserProfile } from "@/contexts/user-context";
+import TourDateCard, {
+  RegisteredUser,
+  TourDate,
+} from "@/components/tour-date-card";
+import ninhBinhInfographicImage from "../../../../public/ninh-binh-infographic.jpg";
 
 // Types
 type Destination = {
@@ -45,28 +41,10 @@ type Destination = {
   };
 };
 
-type TourDate = {
-  id: string;
-  destinationId: string;
-  startDate: string;
-  endDate: string;
-  registered: number;
-  capacity: number;
-  isUserRegistered?: boolean;
-  registeredUsers?: RegisteredUser[];
-};
-
-type RegisteredUser = {
-  id: string;
-  name: string;
-  // avatar: string;
-  department: string;
-};
-
 export default function DestinationPage() {
   const supabase = createClient();
 
-  const { user, isLoaded: isUserLoaded } = useUser();
+  const user = useUserProfile();
   const params = useParams();
   const { booking, fetchMyBooking } = useBooking();
   const destinationId = params.destinationId as string;
@@ -76,7 +54,6 @@ export default function DestinationPage() {
   const [tourDates, setTourDates] = useState<TourDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [selectedTourId, setSelectedTourId] = useState<string | null>(null);
@@ -92,15 +69,7 @@ export default function DestinationPage() {
   const [isCancelLoading, setIsCancelLoading] = useState(false);
 
   // Mock user ID for demo
-  const currentUserId = "user-123";
-
-  // Mock images for gallery
-  const images = [
-    "/placeholder.svg?height=600&width=800",
-    "/placeholder.svg?height=600&width=800",
-    "/placeholder.svg?height=600&width=800",
-    "/placeholder.svg?height=600&width=800",
-  ];
+  const currentUserId = user?.profile?.id || "demo-user-id";
 
   async function fetchTourDates() {
     const { data, error } = await supabase
@@ -136,7 +105,7 @@ export default function DestinationPage() {
 
       if (error) {
         console.error("Error fetching destination:", error);
-        setError("Could not load destination");
+        setError("Không thể tải đích");
         setDestination(null);
         return null;
       }
@@ -156,24 +125,24 @@ export default function DestinationPage() {
         ]);
       } catch (err) {
         console.error("Unexpected error:", err);
-        setError("An unexpected error occurred");
+        setError("Đã xảy ra lỗi không mong muốn");
       } finally {
         setLoading(false);
       }
     }
 
-    if (isUserLoaded && user) {
+    if (user) {
       fetchAll();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [destinationId, isUserLoaded, supabase, user]);
+  }, [destinationId, supabase, user]);
 
   const handleBooking = async (tourId: string) => {
     const hasExistingBooking = tourDates.some((date) => date.isUserRegistered);
 
     if (hasExistingBooking) {
       alert(
-        "You already have an active booking. Please cancel it before booking a new trip.",
+        "Bạn đã có đặt chỗ đang hoạt động. Vui lòng hủy trước khi đặt chuyến đi mới.",
       );
       return;
     }
@@ -189,8 +158,8 @@ export default function DestinationPage() {
 
     try {
       if (!user) {
-        toast.error("Profile update failed", {
-          description: "User authentication required",
+        toast.error("Cập nhật hồ sơ không thành công", {
+          description: "Yêu cầu xác thực người dùng",
         });
         setIsBookingLoading(false);
         return;
@@ -199,13 +168,13 @@ export default function DestinationPage() {
       const supabase = createClient();
       const { error } = await supabase.rpc("book_tour_atomic", {
         p_tour_id: selectedTourId,
-        p_user_id: user.id,
+        p_user_id: user?.profile?.id,
       });
 
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Booking successful!");
+        toast.success("Đặt chỗ thành công!");
         await Promise.all([fetchTourDates(), fetchMyBooking()]);
       }
 
@@ -229,8 +198,8 @@ export default function DestinationPage() {
 
     try {
       if (!user) {
-        toast.error("Profile update failed", {
-          description: "User authentication required",
+        toast.error("Cập nhật hồ sơ không thành công", {
+          description: "Yêu cầu xác thực người dùng",
         });
         setIsCancelLoading(false);
         return;
@@ -238,13 +207,13 @@ export default function DestinationPage() {
 
       const { error } = await supabase.rpc("cancel_booking_atomic", {
         p_booking_id: selectedBookingId,
-        p_user_id: user.id,
+        p_user_id: user?.profile?.id,
       });
 
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Booking canceled successfully!");
+        toast.success("Đã hủy đặt phòng thành công!");
         await Promise.all([fetchTourDates(), fetchMyBooking()]);
       }
 
@@ -280,8 +249,8 @@ export default function DestinationPage() {
       // 3. Fetch profiles for those user IDs
       const { data: profiles, error: profilesError } = await supabase
         .from("profiles")
-        .select("user_id, full_name, department")
-        .in("user_id", userIds);
+        .select("id, full_name, department")
+        .in("id", userIds);
 
       if (profilesError) {
         console.error("Error fetching profiles:", profilesError);
@@ -290,13 +259,13 @@ export default function DestinationPage() {
       }
 
       // 4. Create a map for quick profile lookup by user_id
-      const profilesMap = new Map(profiles?.map((p) => [p.user_id, p]) || []);
+      const profilesMap = new Map(profiles?.map((p) => [p.id, p]) || []);
 
       // 5. Merge bookings with corresponding profiles and map to user info
       const users = bookings.map((booking) => {
         const profile = profilesMap.get(booking.user_id);
         return {
-          id: profile?.user_id || null,
+          id: profile?.id || null,
           name: profile?.full_name || "Unknown",
           // avatar: "", // add if available
           department: profile?.department || "Unknown",
@@ -331,7 +300,7 @@ export default function DestinationPage() {
           className="mt-4"
           onClick={() => window.location.reload()}
         >
-          Try Again
+          Thử lại
         </Button>
       </div>
     );
@@ -343,20 +312,23 @@ export default function DestinationPage() {
 
   return (
     <>
-      <div className="relative bg-black">
+      <div
+        className="relative bg-black"
+        style={{
+          backgroundImage: `url('/ninh-binh-banner2.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <div className="relative h-[35vh] overflow-hidden md:h-[40vh] lg:h-[45vh]">
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          <div className="from-primary/20 to-primary/10 absolute inset-0 flex items-center justify-center bg-gradient-to-r">
-            <span className="text-primary/40 text-4xl font-bold">
-              {destination.name}
-            </span>
-          </div>
           <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
                 <div className="mb-2 flex items-center gap-2 text-white/80">
                   <Link href="/" className="hover:text-white">
-                    Home
+                    Trang chủ
                   </Link>
                   <ChevronRight className="h-4 w-4" />
                   <span>{destination.name}</span>
@@ -368,25 +340,6 @@ export default function DestinationPage() {
             </div>
           </div>
         </div>
-        <div className="bg-black/90 py-3">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {images.map((image, index) => (
-                <button
-                  key={index}
-                  className={`relative h-16 w-24 flex-shrink-0 overflow-hidden rounded-md ${
-                    activeImageIndex === index
-                      ? "ring-primary ring-2 ring-offset-2 ring-offset-black"
-                      : ""
-                  }`}
-                  onClick={() => setActiveImageIndex(index)}
-                >
-                  <div className="from-primary/20 to-primary/10 absolute inset-0 bg-gradient-to-r" />
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -395,7 +348,7 @@ export default function DestinationPage() {
             <Card className="mb-8">
               <CardContent className="p-6">
                 <h2 className="mb-4 text-2xl font-bold">
-                  About {destination.name}
+                  Đôi nét về {destination.name}
                 </h2>
                 <p className="text-muted-foreground">
                   {destination.description}
@@ -404,10 +357,15 @@ export default function DestinationPage() {
             </Card>
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="mb-4 text-2xl font-bold">Trip Itinerary</h2>
+                <h2 className="mb-4 text-2xl font-bold">
+                  Lịch trình chuyến đi
+                </h2>
                 <div className="overflow-hidden rounded-lg">
                   <Image
-                    src={destination.infographicUrl || "/placeholder.svg"}
+                    src={
+                      ninhBinhInfographicImage ??
+                      (destination.infographicUrl || "/placeholder.svg")
+                    }
                     alt={`${destination.name} Itinerary`}
                     width={800}
                     height={600}
@@ -422,12 +380,12 @@ export default function DestinationPage() {
               <Card>
                 <CardContent className="p-6">
                   <h3 className="mb-4 text-xl font-semibold">
-                    Available Dates
+                    Chọn Ngày khởi hành
                   </h3>
                   {tourDates.length === 0 ? (
                     <div className="py-6 text-center">
                       <p className="text-muted-foreground">
-                        No dates available for this destination.
+                        Không có ngày nào có sẵn cho điểm đến này.
                       </p>
                     </div>
                   ) : (
@@ -455,23 +413,25 @@ export default function DestinationPage() {
                   )}
                   <Separator className="my-6" />
                   <div className="space-y-4">
-                    <h4 className="font-medium">Important Information</h4>
+                    <h4 className="font-medium">Lưu ý</h4>
                     <ul className="text-muted-foreground space-y-2 text-sm">
                       <li className="flex items-start gap-2">
                         <Info className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                         <span>
-                          Registration deadline: 2 weeks before departure
+                          Hạn chót đăng ký: 2 tuần trước khi khởi hành
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Info className="text-primary mt-0.5 h-4 w-4 shrink-0" />
                         <span>
-                          Cancellations allowed up to 1 week before departure
+                          Có thể hủy trước 1 tuần so với ngày khởi hành
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <Info className="text-primary mt-0.5 h-4 w-4 shrink-0" />
-                        <span>You can only book one trip at a time</span>
+                        <span>
+                          Bạn chỉ có thể đặt một chuyến đi tại một thời điểm
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -485,10 +445,9 @@ export default function DestinationPage() {
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm Booking</DialogTitle>
+            <DialogTitle>Xác nhận Đăng ký</DialogTitle>
             <DialogDescription>
-              Are you sure you want to book this trip? You can only have one
-              active booking at a time.
+              Bạn chắc chắn muốn chọn chuyến đi này chứ?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -496,13 +455,13 @@ export default function DestinationPage() {
               variant="outline"
               onClick={() => setBookingDialogOpen(false)}
             >
-              Cancel
+              Chọn lại
             </Button>
             <Button onClick={confirmBooking} disabled={isBookingLoading}>
               {isBookingLoading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              Confirm Booking
+              Xác nhận
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -511,10 +470,9 @@ export default function DestinationPage() {
       <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel Booking</DialogTitle>
+            <DialogTitle>Hủy Đăng ký</DialogTitle>
             <DialogDescription>
-              Are you sure you want to cancel your booking? This action cannot
-              be undone.
+              Bạn có chắc chắn muốn hủy đăng ký chuyến đi này không?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -522,7 +480,7 @@ export default function DestinationPage() {
               variant="outline"
               onClick={() => setCancelDialogOpen(false)}
             >
-              Keep Booking
+              Quay lại
             </Button>
             <Button
               variant="destructive"
@@ -532,7 +490,7 @@ export default function DestinationPage() {
               {isCancelLoading ? (
                 <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
               ) : null}
-              Cancel Booking
+              Xác nhận hủy
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -544,9 +502,10 @@ export default function DestinationPage() {
       >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Registered Participants</DialogTitle>
+            <DialogTitle>Thành viên tham gia đã đăng ký</DialogTitle>
             <DialogDescription>
-              {selectedTourUsers.length} people have registered for this trip.
+              {selectedTourUsers.length} thành viên đã đăng ký cho chuyến đi
+              này.
             </DialogDescription>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto">
@@ -570,7 +529,7 @@ export default function DestinationPage() {
                       <p className="text-sm font-medium">{user.name}</p>
                       {user.id === currentUserId && (
                         <Badge variant="outline" className="mt-1 text-xs">
-                          You
+                          Bạn
                         </Badge>
                       )}
                     </div>
@@ -587,120 +546,5 @@ export default function DestinationPage() {
         </DialogContent>
       </Dialog>
     </>
-  );
-}
-
-function getDurationDays(startDate: string, endDate: string): number {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays + 1;
-}
-
-function TourDateCard({
-  tourDate,
-  onBook,
-  onCancel,
-  onShowUsers,
-  isUserRegistered,
-  hasBooked,
-}: {
-  tourDate: TourDate;
-  onBook: () => void;
-  onCancel: () => void;
-  onShowUsers: () => void;
-  isUserRegistered: boolean;
-  hasBooked: boolean;
-}) {
-  const isFullyBooked = tourDate.registered >= tourDate.capacity;
-  const isUserBooking = isUserRegistered;
-
-  return (
-    <div
-      className={`rounded-lg border p-4 transition-all ${isUserBooking ? "border-primary bg-primary/5" : ""}`}
-    >
-      <div className="mb-2 flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-1">
-            <Calendar className="text-primary h-4 w-4" />
-            <span className="font-medium">
-              {formatDateRange(tourDate.startDate, tourDate.endDate)}
-            </span>
-          </div>
-          <div className="mt-1 flex items-center gap-1">
-            <Clock className="text-muted-foreground h-4 w-4" />
-            <span className="text-muted-foreground text-sm">
-              {getDurationDays(tourDate.startDate, tourDate.endDate)} days
-            </span>
-          </div>
-          <div className="mt-1 flex items-center gap-1">
-            <Users className="text-muted-foreground h-4 w-4" />
-            <span className="text-muted-foreground text-sm">
-              Group size: {tourDate.capacity}
-            </span>
-          </div>
-          <div className="text-muted-foreground mt-1 text-sm">
-            {tourDate.capacity - tourDate.registered === 0
-              ? "No spots available"
-              : `${tourDate.capacity - tourDate.registered} spots available`}
-          </div>
-        </div>
-        {isFullyBooked && <Badge variant="destructive">Full</Badge>}
-        {isUserBooking && (
-          <Badge variant="outline" className="border-primary text-primary">
-            Booked
-          </Badge>
-        )}
-      </div>
-      <div className="bg-muted mt-3 h-2 overflow-hidden rounded-full">
-        <div
-          className={`h-full ${
-            isFullyBooked
-              ? "bg-red-500"
-              : tourDate.registered > tourDate.capacity * 0.7
-                ? "bg-amber-500"
-                : "bg-green-500"
-          }`}
-          style={{
-            width: `${Math.min((tourDate.registered / tourDate.capacity) * 100, 100)}%`,
-          }}
-        />
-      </div>
-      <div className="mt-4 flex items-center justify-between">
-        <div className="flex w-full gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onShowUsers}
-            className="flex-1"
-            disabled={tourDate.registered === 0}
-          >
-            <Users className="mr-1 h-4 w-4" />
-            <span>{tourDate.registered} Participants</span>
-          </Button>
-          {isUserBooking ? (
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={onCancel}
-              className="flex-1"
-            >
-              Cancel Booking
-            </Button>
-          ) : (
-            <Button
-              size="sm"
-              variant="default"
-              onClick={onBook}
-              disabled={isFullyBooked || hasBooked}
-              className="flex-1"
-            >
-              Book Now
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
   );
 }
