@@ -273,15 +273,12 @@ export default function ProfileForm() {
                   control={form.control}
                   name="region"
                   render={({ field }) => {
-                    console.log("🚀 ~ ProfileForm ~ field:", field);
                     return (
                       <FormItem>
                         <FormLabel>Khu vực</FormLabel>
                         <Select
-                          key={"region"}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          // value={"north"}
                           disabled
                         >
                           <FormControl>
@@ -380,7 +377,6 @@ export default function ProfileForm() {
                           />
                         </PopoverContent>
                       </Popover>
-
                       <FormMessage />
                     </FormItem>
                   )}

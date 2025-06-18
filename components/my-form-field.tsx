@@ -17,8 +17,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "./ui/textarea";
-import { DatePickerWithRange } from "./date-picker-with-range";
-import { DatePicker } from "./date-picker";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "./ui/calendar";
 
 type Option = {
   value: string;
@@ -57,7 +61,9 @@ export default function MyFormField({
           {typeof renderLabel === "function" ? (
             renderLabel()
           ) : label ? (
-            <FormLabel htmlFor={name}>{label}</FormLabel>
+            <FormLabel htmlFor={name}>
+              {label} <span className="text-red-500">*</span>
+            </FormLabel>
           ) : null}
           {component === "number" ? (
             <FormControl>
@@ -69,15 +75,41 @@ export default function MyFormField({
               />
             </FormControl>
           ) : component === "date-picker" ? (
-            <DatePicker {...field} />
-          ) : component === "date-range" ? (
-            <FormControl>
-              <DatePickerWithRange id={name} {...field} />
-            </FormControl>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full pl-3 text-left font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value ? (
+                      format(field.value, "PPP")
+                    ) : (
+                      <span>Select date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                  disabled={(date) =>
+                    date > new Date() || date < new Date("1900-01-01")
+                  }
+                  captionLayout="dropdown"
+                />
+              </PopoverContent>
+            </Popover>
           ) : component === "select" ? (
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>

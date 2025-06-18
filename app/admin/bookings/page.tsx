@@ -16,12 +16,12 @@ const schema = bookingSchema;
 type DefaultFormValues = BookingFormValues;
 
 const defaultFormValues: DefaultFormValues = {
-  user_id: "",
+  id: "",
   booking_date: new Date(),
 };
 
 interface User {
-  user_id: string;
+  id: string;
   full_name: string;
 }
 
@@ -40,7 +40,7 @@ export default function Page() {
       try {
         const tours = await getRecords<User>("profiles");
         const options = tours.map((d) => ({
-          value: d.user_id,
+          value: d.id,
           label: d.full_name,
         }));
         setUserOptions(options);
