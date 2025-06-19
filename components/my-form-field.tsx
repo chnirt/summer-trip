@@ -24,6 +24,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import FileUploadInput from "./file-upload-input";
+import { toUTCDateOnly } from "@/lib/dateUtils";
 
 type Option = {
   value: string;
@@ -115,7 +116,13 @@ export default function MyFormField({
                 <Calendar
                   mode="single"
                   selected={field.value}
-                  onSelect={field.onChange}
+                  // onSelect={field.onChange}
+                  onSelect={(date) => {
+                    if (date) {
+                      const utcDateOnly = toUTCDateOnly(date);
+                      field.onChange(utcDateOnly);
+                    }
+                  }}
                   captionLayout="dropdown"
                 />
               </PopoverContent>

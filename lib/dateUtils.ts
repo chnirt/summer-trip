@@ -43,3 +43,9 @@ export function formatDateRange(
     return `${start} - ${end}`;
   }
 }
+
+export function toUTCDateOnly(date: Date): Date {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+}
