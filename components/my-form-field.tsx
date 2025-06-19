@@ -24,6 +24,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
 import FileUploadInput from "./file-upload-input";
+import { toLocalDate } from "@/lib/dateUtils";
 
 type Option = {
   value: string;
@@ -114,8 +115,20 @@ export default function MyFormField({
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={field.value}
-                  onSelect={field.onChange}
+                  selected={toLocalDate(field.value)}
+                  onSelect={(date) => {
+                    if (date) {
+                      // Lưu ngày local midnight
+                      const localDate = new Date(
+                        date.getFullYear(),
+                        date.getMonth(),
+                        date.getDate(),
+                      );
+                      field.onChange(localDate);
+                    } else {
+                      field.onChange(undefined);
+                    }
+                  }}
                   captionLayout="dropdown"
                 />
               </PopoverContent>
