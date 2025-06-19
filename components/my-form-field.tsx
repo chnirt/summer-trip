@@ -40,6 +40,7 @@ type MyFormFieldProps = {
   renderLabel?: () => JSX.Element;
   component?: string;
   options?: Options;
+  required?: boolean;
 };
 
 export default function MyFormField({
@@ -51,6 +52,7 @@ export default function MyFormField({
   renderLabel,
   component = "input",
   options,
+  required = false,
 }: MyFormFieldProps) {
   return (
     <FormField
@@ -62,7 +64,8 @@ export default function MyFormField({
             renderLabel()
           ) : label ? (
             <FormLabel htmlFor={name}>
-              {label} <span className="text-red-500">*</span>
+              {label}{" "}
+              {required ? <span className="text-red-500">*</span> : null}
             </FormLabel>
           ) : null}
           {component === "number" ? (

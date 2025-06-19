@@ -33,6 +33,7 @@ type Destination = {
   id: string;
   name: string;
   description: string;
+  youtube_url?: string | null;
   imageUrl: string;
   infographicUrl: string;
   details: {
@@ -343,20 +344,25 @@ export default function DestinationPage() {
           <div className="lg:col-span-2">
             <Card className="mb-8">
               <CardContent className="flex flex-col p-6">
-                <h2 className="mb-4 text-2xl font-bold">
-                  Đôi nét về {destination.name}
-                </h2>
-                {/* <p className="text-muted-foreground">
-                  {destination.description}
-                </p> */}
-                <ReactPlayer
-                  style={{
-                    borderRadius: "var(--radius)",
-                    overflow: "hidden",
-                  }}
-                  url="https://youtu.be/7SLRfQPnGho"
-                  width="100%"
-                />
+                <div className="mb-4">
+                  <h2 className="mb-4 text-2xl font-bold">
+                    Đôi nét về {destination.name}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {destination.description}
+                  </p>
+                </div>
+                {destination.youtube_url ? (
+                  <ReactPlayer
+                    style={{
+                      borderRadius: "var(--radius)",
+                      overflow: "hidden",
+                    }}
+                    url={destination.youtube_url}
+                    width="100%"
+                    controls
+                  />
+                ) : null}
               </CardContent>
             </Card>
             <Card className="mb-8">

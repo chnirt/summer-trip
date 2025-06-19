@@ -45,7 +45,7 @@ type Header = {
     tableRow?: string;
     tableBody?: string;
   };
-  render?: (value: string) => string | undefined;
+  render?: (value: unknown) => unknown;
 };
 
 type Headers = Header[];
@@ -397,7 +397,7 @@ export default function CRUDTemplate({
     <div className="px-4 lg:px-6">
       <Tabs defaultValue="all">
         <div className="flex items-center">
-          <div className="ml-auto flex items-center gap-2 h-7">
+          <div className="ml-auto flex h-7 items-center gap-2">
             {canCreate ? (
               <Button
                 size="sm"
@@ -462,7 +462,7 @@ export default function CRUDTemplate({
                       return (
                         <TableRow key={[item.name, ii].join("-")}>
                           {headers.map((header, hi) => {
-                            const value = String(get(item, header.field));
+                            const value = get(item, header.field) || null;
                             return (
                               <TableCell
                                 key={[header.field, hi].join("-")}

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const destinationSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(1, "Description is required"),
+  youtube_url: z.string().url("Invalid URL format").nullable().optional(),
   region: z.enum(["north", "central", "south", "phuquoc", "foreign"], {
     errorMap: () => ({
       message: "Region must be one of: north, central, south, phuquoc, foreign",

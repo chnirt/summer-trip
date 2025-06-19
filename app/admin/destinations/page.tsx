@@ -52,11 +52,18 @@ const fields = [
   {
     name: "name",
     label: "Name",
+    required: true,
   },
   {
     name: "description",
     label: "Description",
     component: "textarea",
+    required: true,
+  },
+  {
+    name: "youtube_url",
+    label: "YouTube URL",
+    component: "input",
   },
   {
     name: "region",
@@ -95,17 +102,21 @@ export default function Page() {
       field: "description",
       title: "Description",
     },
+     {
+      field: "youtube_url",
+      title: "YouTube URL",
+    },
     {
       field: "region",
       title: "Region",
-      render: (value: string) => {
+      render: (value: unknown) => {
         return regionOptions.find((option) => option.value === value)?.label;
       },
     },
     {
       field: "status",
       title: "Status",
-      render: (value: string) => {
+      render: (value: unknown) => {
         return statusOptions.find((option) => option.value === value)?.label;
       },
     },

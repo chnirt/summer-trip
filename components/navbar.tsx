@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+// import { MapPin } from "lucide-react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -37,7 +37,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-30 border-b bg-white">
       <div className="mx-auto flex h-16 max-w-7xl flex-1 items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <MapPin className="text-primary h-5 w-5" />
+          {/* <MapPin className="text-primary h-5 w-5" /> */}
           <h1 className="text-xl font-semibold">
             Happy Trip – Togetherness 2025
           </h1>
