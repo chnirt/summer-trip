@@ -67,6 +67,10 @@ type CRUDTemplateProps = {
   fields: Fields;
   actions?: Actions;
   canCreate?: boolean;
+  fetcher?: (params: {
+    from: number;
+    to: number;
+  }) => Promise<{ data: unknown[]; count: number | null }>;
 };
 
 type Data = {
@@ -82,6 +86,7 @@ export default function CRUDTemplate({
   fields,
   actions,
   canCreate = true,
+  fetcher,
 }: CRUDTemplateProps) {
   const methods = useFormContext();
 
@@ -200,25 +205,29 @@ export default function CRUDTemplate({
       const from = (currentPage - 1) * pageSize;
       const to = from + pageSize - 1;
 
-      const supabase = createClient();
-      const { data, error, count } = await supabase
-        .from(table)
-        .select("*", { count: "exact" })
-        .range(from, to)
-        .order("created_at", { ascending: false });
+      let result;
+      if (fetcher) {
+        result = await fetcher({ from, to });
+      } else {
+        const supabase = createClient();
+        const { data, error, count } = await supabase
+          .from(table)
+          .select("*", { count: "exact" })
+          .range(from, to)
+          .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error(`Error fetching ${model} data:`, error);
-        toast.error(`Failed to fetch ${model} data: ${error.message}`);
-        return;
-      }
-
-      if (data) {
-        setData(data);
-        if (count !== null) {
-          setTotal(count);
-          setTotalPages(Math.ceil(count / pageSize));
+        if (error) {
+          console.error(`Error fetching ${model} data:`, error);
+          toast.error(`Failed to fetch ${model} data: ${error.message}`);
+          return;
         }
+
+        result = { data: data || [], count };
+      }
+      setData(result.data);
+      if (result.count !== null) {
+        setTotal(result.count);
+        setTotalPages(Math.ceil(result.count / pageSize));
       }
     } catch (error) {
       if (error instanceof Error) {

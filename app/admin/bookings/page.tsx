@@ -4,10 +4,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import CRUDTemplate from "@/components/dashboard/crud-template";
-import { useEffect, useState } from "react";
-import { getRecords } from "@/components/dashboard/crud-service";
 import { format } from "date-fns";
 import { BookingFormValues, bookingSchema } from "@/schemas/booking";
+import { createClient } from "@/utils/supabase/client";
 
 const table = "bookings";
 const model = "Booking";
@@ -16,14 +15,9 @@ const schema = bookingSchema;
 type DefaultFormValues = BookingFormValues;
 
 const defaultFormValues: DefaultFormValues = {
-  id: "",
+  full_name: "",
   booking_date: new Date(),
 };
-
-interface User {
-  id: string;
-  full_name: string;
-}
 
 export default function Page() {
   const methods = useForm<DefaultFormValues>({
@@ -31,34 +25,10 @@ export default function Page() {
     defaultValues: defaultFormValues,
   });
 
-  const [userOptions, setUserOptions] = useState<
-    { value: string; label: string }[]
-  >([]);
-
-  useEffect(() => {
-    async function loadTours() {
-      try {
-        const profiles = await getRecords<User>("profiles");
-        const options = profiles.map((d) => ({
-          value: d.id,
-          label: d.full_name,
-        }));
-        setUserOptions(options);
-      } catch (error) {
-        console.error("Failed to fetch tours:", error);
-      }
-    }
-
-    loadTours();
-  }, []);
-
   const headers = [
     {
-      field: "user_id",
-      title: "User",
-      render: (value: unknown) => {
-        return userOptions.find((option) => option.value === value)?.label;
-      },
+      field: "profiles.full_name",
+      title: "Full Name",
     },
     {
       field: "booking_date",
@@ -69,10 +39,8 @@ export default function Page() {
 
   const fields = [
     {
-      name: "user_id",
-      label: "User",
-      component: "select",
-      options: userOptions,
+      name: "full_name",
+      label: "Full Name",
     },
     {
       name: "booking_date",
@@ -80,6 +48,36 @@ export default function Page() {
       component: "date-picker",
     },
   ];
+
+  const supabase = createClient();
+
+  const fetchBookingData = async ({
+    from,
+    to,
+  }: {
+    from: number;
+    to: number;
+  }) => {
+    const { data, error, count } = await supabase
+      .from("bookings")
+      .select(
+        `
+          id,
+          tour_id,
+          user_id,
+          booking_date,
+          profiles (
+            full_name
+          )
+        `,
+      )
+      .range(from, to)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return { data: data || [], count };
+  };
 
   return (
     <FormProvider {...methods}>
@@ -95,6 +93,7 @@ export default function Page() {
           },
         ]}
         canCreate={false}
+        fetcher={fetchBookingData}
         {...methods}
       />
     </FormProvider>

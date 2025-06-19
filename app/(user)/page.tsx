@@ -126,7 +126,7 @@ export default function HomePage() {
                     <Info className="h-4 w-4" />
                     <AlertDescription>
                       <div className="text-black">
-                        You have an active booking for{" "}
+                        Bạn có một đặt phòng đang hoạt động cho{" "}
                         <span className="font-bold">
                           {booking.destinationName}
                         </span>{" "}
