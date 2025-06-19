@@ -38,8 +38,8 @@ export default function Page() {
   useEffect(() => {
     async function loadTours() {
       try {
-        const tours = await getRecords<User>("profiles");
-        const options = tours.map((d) => ({
+        const profiles = await getRecords<User>("profiles");
+        const options = profiles.map((d) => ({
           value: d.id,
           label: d.full_name,
         }));
