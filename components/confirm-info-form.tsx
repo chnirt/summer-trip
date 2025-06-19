@@ -40,7 +40,12 @@ import { Calendar } from "./ui/calendar";
 
 // Hàm mã hóa giả lập
 function encryptData(data: object): string {
-  return btoa(JSON.stringify(data));
+  const jsonString = JSON.stringify(data);
+  // Encode JSON string sang UTF-8 bytes
+  const utf8Bytes = new TextEncoder().encode(jsonString);
+  // Chuyển Uint8Array sang Base64
+  const base64String = btoa(String.fromCharCode(...utf8Bytes));
+  return base64String;
 }
 
 // Việt hóa thông báo lỗi
