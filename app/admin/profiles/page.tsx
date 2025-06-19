@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ProfileFormValues, profileSchema } from "@/schemas/profileSchema";
 import CRUDTemplate from "@/components/dashboard/crud-template";
+import { decryptData } from "@/components/confirm-info-form";
 
 const table = "profiles";
 const model = "Profile";
@@ -94,6 +95,43 @@ export default function Page() {
       title: "Region",
       render: (value: unknown) => {
         return regionOptions.find((option) => option.value === value)?.label;
+      },
+    },
+    {
+      field: "encrypted_personal_data",
+      title: "Encrypted Personal Data",
+      render: (value: unknown) => {
+        type PersonalData = {
+          idCardNumber: string;
+          phoneNumber: string;
+          dateOfBirth?: string;
+          address: string;
+        };
+        const decrypted = decryptData(String(value)) as PersonalData | null;
+        if (!decrypted) return "Không thể giải mã";
+
+        const formattedDate = decrypted.dateOfBirth
+          ? new Intl.DateTimeFormat("vi-VN").format(
+              new Date(decrypted.dateOfBirth),
+            )
+          : "Không có ngày sinh";
+
+        return (
+          <div>
+            <div>
+              <strong>ID Card:</strong> {decrypted.idCardNumber}
+            </div>
+            <div>
+              <strong>Phone:</strong> {decrypted.phoneNumber}
+            </div>
+            <div>
+              <strong>Date of Birth:</strong> {formattedDate}
+            </div>
+            <div>
+              <strong>Address:</strong> {decrypted.address}
+            </div>
+          </div>
+        );
       },
     },
 

@@ -43,13 +43,3 @@ export function formatDateRange(
     return `${start} - ${end}`;
   }
 }
-
-/**
- * Chuyển một Date object thành ngày local với giờ phút giây bằng 0
- * Trả về undefined nếu đầu vào không hợp lệ
- */
-export function toLocalDate(date: Date | undefined): Date | undefined {
-  if (!date) return undefined;
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-

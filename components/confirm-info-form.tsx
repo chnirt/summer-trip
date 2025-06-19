@@ -38,14 +38,33 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 
-// Hàm mã hóa giả lập
 function encryptData(data: object): string {
+  // Chuyển object thành chuỗi JSON
   const jsonString = JSON.stringify(data);
-  // Encode JSON string sang UTF-8 bytes
+  // Mã hóa chuỗi JSON thành Uint8Array (UTF-8 bytes)
   const utf8Bytes = new TextEncoder().encode(jsonString);
-  // Chuyển Uint8Array sang Base64
-  const base64String = btoa(String.fromCharCode(...utf8Bytes));
-  return base64String;
+  // Chuyển Uint8Array thành chuỗi nhị phân
+  let binary = "";
+  for (let i = 0; i < utf8Bytes.length; i++) {
+    binary += String.fromCharCode(utf8Bytes[i]);
+  }
+  // Mã hóa chuỗi nhị phân sang Base64
+  return btoa(binary);
+}
+
+export function decryptData(base64String: string): object | null {
+  try {
+    const binaryString = atob(base64String);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const jsonString = new TextDecoder().decode(bytes);
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("Giải mã thất bại:", error);
+    return null;
+  }
 }
 
 // Việt hóa thông báo lỗi
@@ -176,16 +195,11 @@ export default function ProfileForm() {
         .upsert(profileData, { onConflict: "email" });
 
       if (error) {
-        toast.error("Lưu hồ sơ thất bại", {
-          description: error.message,
-        });
+        toast.error("Lưu hồ sơ thất bại");
         return;
       }
 
-      toast.success("Hoàn tất hồ sơ!", {
-        description: "Hồ sơ của bạn đã được lưu thành công.",
-        duration: 3000,
-      });
+      toast.success("Hoàn tất hồ sơ!");
 
       setTimeout(() => {
         router.push("/");
