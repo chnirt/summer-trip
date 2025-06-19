@@ -1,3 +1,4 @@
+// https://github.com/shadcn-ui/ui/blob/84d6c83bad10e995bd648d59403f402ce7728444/apps/www/registry/new-york/internal/dashboard-06.tsx#L274
 "use client";
 
 import CreateUpdateAlertDialog, { Fields } from "./cu-alert-dialog";
@@ -396,12 +397,53 @@ export default function CRUDTemplate({
   return (
     <div className="px-4 lg:px-6">
       <Tabs defaultValue="all">
-        <div className="flex items-center">
-          <div className="ml-auto flex h-7 items-center gap-2">
+        <div className="flex items-center gap-2">
+          {/* <div className="bg-background/95 supports-[backdrop-filter]:bg-background/60 w-full backdrop-blur">
+            <form>
+              <div className="relative">
+                <Search className="text-muted-foreground absolute top-2.5 left-2 h-4 w-4" />
+                <Input placeholder="Search" className="flex-1 pl-8" />
+              </div>
+            </form>
+          </div> */}
+          {/* <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="draft">Draft</TabsTrigger>
+            <TabsTrigger value="archived" className="hidden sm:flex">
+              Archived
+            </TabsTrigger>
+          </TabsList> */}
+          <div className="ml-auto flex items-center gap-2">
+            {/* <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-7 gap-1">
+                  <ListFilter className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Filter
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuCheckboxItem checked>
+                  Active
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
+              </DropdownMenuContent>
+            </DropdownMenu> */}
+            {/* <Button size="sm" variant="outline" className="h-7 gap-1">
+              <File className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Export
+              </span>
+            </Button> */}
             {canCreate ? (
               <Button
                 size="sm"
-                className="gap-1"
+                className="h-7 gap-1"
                 onClick={handleShowCreateAlertDialog}
               >
                 <PlusCircle className="h-3.5 w-3.5" />
@@ -467,7 +509,7 @@ export default function CRUDTemplate({
                               <TableCell
                                 key={[header.field, hi].join("-")}
                                 className={cn(
-                                  "max-w-[100px] truncate",
+                                  "max-w-[100px] truncate whitespace-pre-wrap",
                                   header.classNames?.tableCell,
                                 )}
                               >

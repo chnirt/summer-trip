@@ -56,14 +56,14 @@ export default function Page() {
     {
       field: "user_id",
       title: "User",
-      render: (value: string) => {
+      render: (value: unknown) => {
         return userOptions.find((option) => option.value === value)?.label;
       },
     },
     {
       field: "booking_date",
       title: "Booking Date",
-      render: (value: string) => format(value, "yyyy-MM-dd"),
+      render: (value: unknown) => format(value as Date, "yyyy-MM-dd"),
     },
   ];
 

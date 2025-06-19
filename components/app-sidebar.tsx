@@ -18,7 +18,7 @@ import {
   IconReport,
   IconSearch,
   IconSettings,
-  // IconUsers,
+  IconUsers,
 } from "@tabler/icons-react";
 
 // import { NavDocuments } from "@/components/nav-documents";
@@ -50,7 +50,7 @@ const data = {
     { title: "Destinations", url: "/admin/destinations", icon: IconMapPin },
     { title: "Tours", url: "/admin/tours", icon: IconCalendar },
     { title: "Bookings", url: "/admin/bookings", icon: IconListDetails },
-    // { title: "Users", url: "/admin/users", icon: IconUsers },
+    { title: "Profiles", url: "/admin/profiles", icon: IconUsers },
     // {
     //   title: "Lifecycle",
     //   url: "#",
@@ -167,7 +167,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="#">
-                <IconMapPin className="!size-5" />
+                {/* <IconMapPin className="!size-5" /> */}
                 <span className="text-base font-semibold">Summer Journeys</span>
               </a>
             </SidebarMenuButton>

@@ -57,7 +57,7 @@ export default function Page() {
     {
       field: "destination_id",
       title: "Destination",
-      render: (value: string) => {
+      render: (value: unknown) => {
         return destinationOptions.find((option) => option.value === value)
           ?.label;
       },
@@ -86,6 +86,7 @@ export default function Page() {
       label: "Destination",
       component: "select",
       options: destinationOptions,
+      required: true,
     },
     {
       name: "start_date",
