@@ -8,7 +8,7 @@ export type Destination = {
   id: string;
   name: string;
   description: string;
-  imageUrl: string;
+  thumbnail_url?: string;
   trip_count: number;
   region: string;
 };
@@ -22,11 +22,14 @@ export default function DestinationCard({
     <Card className="group overflow-hidden py-0 transition-all hover:shadow-md">
       <div className="relative aspect-[4/3] overflow-hidden">
         <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 to-transparent" />
-        <div className="from-primary/20 to-primary/10 absolute inset-0 flex items-center justify-center bg-gradient-to-r">
-          <span className="text-primary/40 text-2xl font-bold">
-            {destination.name}
-          </span>
-        </div>
+        {destination.thumbnail_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={destination.thumbnail_url}
+            alt={destination.name}
+            className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
+          />
+        ) : null}
         <div className="absolute bottom-3 left-3 z-20">
           <h3 className="text-lg font-semibold text-white">
             {destination.name}

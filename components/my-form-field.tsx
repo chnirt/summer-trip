@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "./ui/calendar";
+import FileUploadInput from "./file-upload-input";
 
 type Option = {
   value: string;
@@ -41,6 +42,8 @@ type MyFormFieldProps = {
   component?: string;
   options?: Options;
   required?: boolean;
+  uploading: boolean;
+  setUploading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function MyFormField({
@@ -53,6 +56,8 @@ export default function MyFormField({
   component = "input",
   options,
   required = false,
+  uploading,
+  setUploading,
 }: MyFormFieldProps) {
   return (
     <FormField
@@ -68,7 +73,16 @@ export default function MyFormField({
               {required ? <span className="text-red-500">*</span> : null}
             </FormLabel>
           ) : null}
-          {component === "number" ? (
+          {component === "file" ? (
+            <FormControl>
+              <FileUploadInput
+                id={name}
+                uploading={uploading}
+                setUploading={setUploading}
+                {...field}
+              />
+            </FormControl>
+          ) : component === "number" ? (
             <FormControl>
               <Input
                 id={name}

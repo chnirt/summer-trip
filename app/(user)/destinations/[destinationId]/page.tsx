@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +25,6 @@ import TourDateCard, {
   RegisteredUser,
   TourDate,
 } from "@/components/tour-date-card";
-import ninhBinhInfographicImage from "../../../../public/ninh-binh-infographic.jpg";
 import ReactPlayer from "react-player";
 
 // Types
@@ -34,8 +33,7 @@ type Destination = {
   name: string;
   description: string;
   youtube_url?: string | null;
-  imageUrl: string;
-  infographicUrl: string;
+  trip_url?: string;
   details: {
     included: string[];
     notIncluded: string[];
@@ -370,18 +368,21 @@ export default function DestinationPage() {
                 <h2 className="mb-4 text-2xl font-bold">
                   Lịch trình chuyến đi
                 </h2>
-                <div className="overflow-hidden rounded-lg">
-                  <Image
-                    src={
-                      ninhBinhInfographicImage ??
-                      (destination.infographicUrl || "/placeholder.svg")
-                    }
-                    alt={`${destination.name} Itinerary`}
-                    width={800}
-                    height={600}
-                    className="h-auto w-full"
-                  />
-                </div>
+                {destination.trip_url ? (
+                  <div className="overflow-hidden rounded-lg">
+                    <img
+                      src={destination.trip_url || "/placeholder.svg"}
+                      alt={`${destination.name} Itinerary`}
+                      width={800}
+                      height={600}
+                      className="h-auto w-full"
+                    />
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">
+                    Chưa có lịch trình
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>

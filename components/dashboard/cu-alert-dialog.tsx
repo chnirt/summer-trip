@@ -12,6 +12,7 @@ import {
 import { Form } from "@/components/ui/form";
 import MyFormField from "../my-form-field";
 import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 
 type Field = {
   name: string;
@@ -44,6 +45,9 @@ export default function CreateUpdateAlertDialog({
   loading?: boolean;
 }) {
   const form = useFormContext();
+  const [uploading, setUploading] = useState(false);
+
+  const isSubmitDisabled = loading || uploading;
 
   return (
     <Dialog {...{ open, onOpenChange }}>
@@ -62,6 +66,8 @@ export default function CreateUpdateAlertDialog({
                       control: form?.control,
                       className: "grid grid-cols-4 items-center gap-4",
                       ...field,
+                      uploading,
+                      setUploading,
                     }}
                   />
                 </div>
@@ -83,7 +89,7 @@ export default function CreateUpdateAlertDialog({
               <Button type="button" variant="outline" onClick={onCancel}>
                 {cancelText}
               </Button>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={isSubmitDisabled}>
                 {loading ? (
                   <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}

@@ -61,6 +61,16 @@ const fields = [
     required: true,
   },
   {
+    name: "thumbnail_url",
+    label: "Thumbnail URL",
+    component: "file",
+  },
+  {
+    name: "trip_url",
+    label: "Trip URL",
+    component: "file",
+  },
+  {
     name: "youtube_url",
     label: "YouTube URL",
     component: "input",
@@ -102,7 +112,9 @@ export default function Page() {
       field: "description",
       title: "Description",
     },
-     {
+    { field: "thumbnail_url", title: "Thumbnail URL" },
+    { field: "trip_url", title: "Trip URL" },
+    {
       field: "youtube_url",
       title: "YouTube URL",
     },
