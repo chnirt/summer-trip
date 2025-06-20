@@ -11,10 +11,10 @@ import { useBooking } from "@/contexts/booking-context";
 import { formatDateRange } from "@/lib/dateUtils";
 import DestinationCard, { Destination } from "@/components/destination-card";
 import { useUserProfile } from "@/contexts/user-context";
-import banner1Image from "../../public/mobile-banner.png";
-import banner2Image from "../../public/tablet-banner.png";
-import banner3Image from "../../public/laptop-banner.png";
-import banner4Image from "../../public/big-laptop-banner.png";
+import mobileBanner from "../../public/images/cyan-mobile-banner.png";
+import tabletBanner from "../../public/images/cyan-tablet-banner.png";
+import laptopBanner from "../../public/images/cyan-laptop-banner.png";
+import BigLaptopBanner from "../../public/images/cyan-big-laptop-banner.png";
 
 export default function HomePage() {
   const supabase = createClient();
@@ -78,33 +78,33 @@ export default function HomePage() {
         <div className="bg-primary/5 relative py-10 md:py-14">
           <div className="absolute inset-0 z-0">
             <Image
-              className="flex md:hidden"
-              src={banner1Image}
-              alt="Banner"
+              className="flex bg-[#01B0AE] md:hidden"
+              src={mobileBanner}
+              alt={"mobileBanner"}
               fill
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "cover" }}
               priority
             />
             <Image
-              className="hidden md:flex lg:hidden"
-              src={banner2Image}
-              alt="Banner"
+              className="hidden bg-[#01B0AE] md:flex lg:hidden"
+              src={tabletBanner}
+              alt="tabletBanner"
               fill
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "cover" }}
               priority
             />
             <Image
-              className="hidden lg:flex xl:hidden"
-              src={banner3Image}
-              alt="Banner"
+              className="hidden bg-[#01B0AE] lg:flex xl:hidden"
+              src={laptopBanner}
+              alt="laptopBanner"
               fill
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "cover" }}
               priority
             />
             <Image
-              className="hidden xl:flex"
-              src={banner4Image}
-              alt="Banner"
+              className="hidden bg-[#01B0AE] xl:flex"
+              src={BigLaptopBanner}
+              alt="bigLaptopBanner"
               fill
               style={{ objectFit: "contain" }}
               priority

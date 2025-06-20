@@ -26,6 +26,11 @@ import TourDateCard, {
   TourDate,
 } from "@/components/tour-date-card";
 import ReactPlayer from "react-player";
+import Image from "next/image";
+import mobileBanner from "../../../../public/images/orange-mobile-banner.png";
+import tabletBanner from "../../../../public/images/orange-tablet-banner.png";
+import laptopBanner from "../../../../public/images/orange-laptop-banner.png";
+import BigLaptopBanner from "../../../../public/images/orange-big-laptop-banner.png";
 
 // Types
 type Destination = {
@@ -312,10 +317,41 @@ export default function DestinationPage() {
 
   return (
     <>
-      <div
-        className="relative bg-black bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/ninh-binh-banner2.jpg')" }}
-      >
+      <div className="relative bg-[#F25E40] bg-contain bg-center bg-no-repeat">
+        <div className="absolute inset-0 z-0">
+          <Image
+            className="flex bg-[##F25E40] md:hidden"
+            src={mobileBanner}
+            alt={"mobileBanner"}
+            fill
+            style={{ objectFit: "cover" }}
+            priority
+          />
+          <Image
+            className="hidden bg-[##F25E40] md:flex lg:hidden"
+            src={tabletBanner}
+            alt="tabletBanner"
+            fill
+            style={{ objectFit: "cover" }}
+            priority
+          />
+          <Image
+            className="hidden bg-[##F25E40] lg:flex xl:hidden"
+            src={laptopBanner}
+            alt="laptopBanner"
+            fill
+            style={{ objectFit: "cover" }}
+            priority
+          />
+          <Image
+            className="hidden bg-[##F25E40] xl:flex"
+            src={BigLaptopBanner}
+            alt="bigLaptopBanner"
+            fill
+            style={{ objectFit: "cover" }}
+            priority
+          />
+        </div>
         <div className="relative h-[35vh] overflow-hidden md:h-[40vh] lg:h-[45vh]">
           <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute right-0 bottom-0 left-0 z-20 mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">

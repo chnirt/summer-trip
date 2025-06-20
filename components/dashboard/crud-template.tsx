@@ -240,7 +240,7 @@ export default function CRUDTemplate({
     } finally {
       setLoading(false);
     }
-  }, [currentPage, model, pageSize, table]);
+  }, [currentPage, fetcher, model, pageSize, table]);
 
   const resetForm = useCallback(() => {
     methods.reset(defaultFormValues);

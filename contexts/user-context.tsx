@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 type UserProfile = {
@@ -24,7 +23,6 @@ const UserContext = createContext<UserProfile | null>(null);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchUser() {
@@ -34,7 +32,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       } = await supabase.auth.getSession();
 
       if (!session) {
-        router.push("/login");
         return;
       }
 
@@ -46,20 +43,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         .eq("email", email)
         .single();
 
-      if (profile?.role === "admin") {
-        router.push("/admin/dashboard"); // Redirect admin to admin dashboard
-      } else {
-        if (!profile?.is_confirmed) {
-          router.push("/confirm-info");
-        } else {
-          router.push("/");
-        }
-      }
-
       setUserProfile({ email, profile, session });
     }
     fetchUser();
-  }, [router]);
+  }, []);
 
   if (!userProfile) {
     return (
